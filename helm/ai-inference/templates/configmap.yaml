@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ai-inference.fullname" . }}-config
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "ai-inference.labels" . | nindent 4 }}
+data:
+  APP_ENV: {{ .Values.config.APP_ENV | quote }}
+  PLATFORM_NAME: {{ .Values.config.PLATFORM_NAME | quote }}
+  LOG_LEVEL: {{ .Values.config.LOG_LEVEL | quote }}

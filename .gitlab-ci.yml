@@ -1,0 +1,84 @@
+stages:
+  - test
+  - build
+  - update-gitops
+  - deploy-aks
+  - verify-aks
+
+default:
+  tags:
+    - jcloudcodes
+
+
+variables:
+  IMAGE_TAG: "$CI_PIPELINE_IID"
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_IID"
+  IMAGE_LATEST: "$CI_REGISTRY_IMAGE:latest"
+
+test:
+  stage: test
+  script:
+    - python3 -m pip install --no-cache-dir --progress-bar off -r requirements.txt
+    - python3 -m compileall app
+
+
+build:
+  stage: build
+  before_script:
+    - docker info
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - docker build -t "$IMAGE_NAME" -t "$IMAGE_LATEST" .
+    - docker push "$IMAGE_NAME"
+    - docker push "$IMAGE_LATEST"
+
+update-gitops:
+  stage: update-gitops
+  needs:
+    - build
+  before_script:
+    - git config --global user.email "gitlab-ci@jcloudcodes.com"
+    - git config --global user.name "gitlab-ci"
+  script:
+    - git clone https://oauth2:${GITOPS_TOKEN}@gitlab.com/jcloudcodesgroup/ai-platform-gitops.git
+    - cd ai-platform-gitops
+    - yq -i '.image.repository = strenv(CI_REGISTRY_IMAGE)' environments/dev/values.yaml
+    - yq -i '.image.tag = strenv(CI_PIPELINE_IID)' environments/dev/values.yaml
+    - git add environments/dev/values.yaml
+    - git commit -m "Update ai-inference image to ${CI_PIPELINE_IID}" || echo "No changes to commit"
+    - git push origin main
+  only:
+    - main
+
+deploy-aks:
+  stage: deploy-aks
+  needs:
+    - update-gitops
+  before_script:
+    - mkdir -p ~/.kube
+    - printf "%s" "$AKS_KUBECONFIG_B64" | base64 -d > ~/.kube/config
+    - kubectl config current-context
+  script:
+    - kubectl annotate application ai-inference-dev -n argocd argocd.argoproj.io/refresh=hard --overwrite
+    - kubectl rollout restart deployment ai-inference -n ai-platform || true
+    - kubectl rollout status deployment ai-inference -n ai-platform --timeout=300s
+  only:
+    - main
+
+verify-aks:
+  stage: verify-aks
+  needs:
+    - deploy-aks
+  before_script:
+    - mkdir -p ~/.kube
+    - printf "%s" "$AKS_KUBECONFIG_B64" | base64 -d > ~/.kube/config
+    - kubectl config current-context
+  script:
+    - kubectl get pods -n ai-platform
+    - kubectl get svc -n ai-platform
+    - kubectl get ingress -n ai-platform
+    - kubectl get deployment ai-inference -n ai-platform
+    - kubectl rollout status deployment ai-inference -n ai-platform --timeout=300s
+    #- kubectl run ai-health-check --rm -i --restart=Never --image=curlimages/curl -- curl -f http://ai-inference.ai-platform.svc.cluster.local:8000/health
+  only:
+    - main

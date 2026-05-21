@@ -1,0 +1,70 @@
+namespace:
+  create: false
+  name: ai-platform
+
+replicaCount: 2
+
+image:
+  repository: registry.gitlab.com/jcloudcodes/ai-inference-api
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: gitlab-registry-secret
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ai-inference-ksa
+  annotations: {}
+  # For GKE Workload Identity later:
+  # annotations:
+  #   iam.gke.io/gcp-service-account: ai-inference-gsa@PROJECT_ID.iam.gserviceaccount.com
+
+config:
+  APP_ENV: dev
+  PLATFORM_NAME: GKE Enterprise AI/ML Platform
+  LOG_LEVEL: INFO
+
+service:
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: ai.jcloudcodes.com
+  path: /
+  pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+readinessProbe:
+  path: /health
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+livenessProbe:
+  path: /health
+  initialDelaySeconds: 30
+  periodSeconds: 20
+
+networkPolicy:
+  enabled: true

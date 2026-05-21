@@ -1,0 +1,384 @@
+<html>
+  <head>
+    <title>Enterprise AI/ML Cloud Platform</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        color: white;
+        padding: 104px 32px 40px;
+        background:
+          radial-gradient(circle at 90% 65%, rgba(236,72,153,0.45), transparent 22%),
+          radial-gradient(circle at 85% 75%, rgba(37,99,235,0.45), transparent 28%),
+          radial-gradient(circle at 95% 50%, rgba(124,58,237,0.45), transparent 25%),
+          linear-gradient(135deg, #020617, #020617 45%, #071133);
+        overflow-x: hidden;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        right: -120px;
+        bottom: -180px;
+        width: 780px;
+        height: 780px;
+        border-radius: 50%;
+        border: 18px solid transparent;
+        background:
+          conic-gradient(
+            from 120deg,
+            transparent,
+            #2563eb,
+            #7c3aed,
+            #ec4899,
+            #f97316,
+            #84cc16,
+            transparent
+          );
+        filter: blur(3px);
+        opacity: 0.85;
+        animation: spinGlow 18s linear infinite;
+        z-index: 0;
+      }
+
+      @keyframes spinGlow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+
+      .navbar {
+        position: fixed;
+        top: 18px;
+        left: 24px;
+        right: 24px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 18px;
+        border-radius: 18px;
+        background: rgba(2, 6, 23, 0.72);
+        border: 1px solid rgba(56, 189, 248, 0.32);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(12px);
+      }
+
+      .nav-title {
+        color: #e2e8f0;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        background: rgba(15, 23, 42, 0.72);
+        color: #cbd5e1;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+      }
+
+      .nav-links a:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.7);
+        color: #38bdf8;
+        background: rgba(8, 47, 73, 0.72);
+      }
+
+      .content-wrap {
+        position: relative;
+        z-index: 1;
+        padding-left: 88px;
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 120px 18px 24px;
+        }
+
+        .navbar {
+          left: 12px;
+          right: 12px;
+          top: 12px;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .content-wrap {
+          padding-left: 0;
+        }
+
+        .scene,
+        .card {
+          width: 100%;
+        }
+      }
+
+      .scene {
+        perspective: 1800px;
+        width: 720px;
+      }
+
+      .card {
+        position: relative;
+        z-index: 1;
+        width: 720px;
+        min-height: 560px;
+        border-radius: 16px;
+        transform-style: preserve-3d;
+        transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+      }
+
+      .card.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      .card-face {
+        position: absolute;
+        inset: 0;
+        padding: 26px 32px;
+        border-radius: 16px;
+        background: rgba(2, 6, 23, 0.72);
+        border: 1.5px solid rgba(56,189,248,0.85);
+        box-shadow:
+          0 0 18px rgba(56,189,248,0.7),
+          0 0 28px rgba(236,72,153,0.55),
+          inset 0 0 22px rgba(15,23,42,0.9);
+        backface-visibility: hidden;
+      }
+
+      .card-front {
+        display: block;
+      }
+
+      .card-back {
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: flex-start;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 8px 18px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #06b6d4, #6366f1, #ec4899);
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 22px;
+      }
+
+      h1 {
+        color: #38bdf8;
+        font-size: 34px;
+        line-height: 1.1;
+        margin-bottom: 20px;
+      }
+
+      p, li {
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      ul {
+        margin: 16px 0 22px 34px;
+      }
+
+      .model {
+        margin: 18px 0;
+      }
+
+      .section-title {
+        font-weight: 500;
+      }
+
+      code {
+        background: #020617;
+        padding: 5px 10px;
+        border-radius: 7px;
+        color: #e2e8f0;
+        font-size: 15px;
+      }
+
+      a {
+        color: #38bdf8;
+        font-weight: bold;
+      }
+
+
+      .card-hint {
+        margin-top: 20px;
+        color: #cbd5e1;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .profile-image-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 320px;
+        margin-top: 2px;
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        border-radius: 12px;
+        background: rgba(15, 23, 42, 0.95);
+        overflow: hidden;
+        padding: 10px;
+      }
+
+      .profile-image {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        object-fit: contain;
+        object-position: top center;
+        border-radius: 8px;
+        display: block;
+      }
+
+      .back-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .ghost-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(56, 189, 248, 0.36);
+        background: rgba(8, 47, 73, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-title">Platform Links</div>
+      <div class="nav-links">
+        <a href="https://kubernetes.io" target="_blank" rel="noreferrer">Kubernetes</a>
+        <a href="https://gitlab.com" target="_blank" rel="noreferrer">GitLab</a>
+        <a href="https://argo-cd.readthedocs.io" target="_blank" rel="noreferrer">Argo CD</a>
+        <a href="https://helm.sh" target="_blank" rel="noreferrer">Helm</a>
+        <a href="https://prometheus.io" target="_blank" rel="noreferrer">Prometheus</a>
+        <a href="https://grafana.com" target="_blank" rel="noreferrer">Grafana</a>
+        <a href="https://www.jenkins.io" target="_blank" rel="noreferrer">Jenkins</a>
+        <a href="https://azure.microsoft.com" target="_blank" rel="noreferrer">Azure</a>
+        <a href="https://cloud.google.com" target="_blank" rel="noreferrer">Google Cloud</a>
+        <a href="https://aws.amazon.com" target="_blank" rel="noreferrer">AWS</a>
+        <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </nav>
+
+    <div class="content-wrap">
+      <div class="scene">
+        <div class="card" id="profile-card" role="button" tabindex="0" aria-label="Flip card to view Eagunu profile image">
+          <div class="card-face card-front">
+            <div class="badge">Live Transformer AI Inference Platform</div>
+
+            <h1>Enterprise AI/ML Cloud Platform</h1>
+
+            <p class="section-title">
+              Real Transformer AI inference platform running on:
+            </p>
+
+            <ul>
+              <li>Kubernetes</li>
+              <li>AKS / EKS / GKE Ready</li>
+              <li>GitLab CI/CD</li>
+              <li>Argo CD GitOps</li>
+              <li>Helm</li>
+              <li>Prometheus</li>
+              <li>Grafana</li>
+              <li>Multi-Model Inference Routing</li>
+              <li>Ask AI Knowledge Assistant</li>
+            </ul>
+
+            <p class="model">
+              <b>Model:</b> distilbert-base-uncased-finetuned-sst-2-english
+            </p>
+
+            <p><b>Endpoints:</b></p>
+
+            <ul>
+              <li><code>GET /health</code></li>
+              <li><code>POST /predict/sentiment</code></li>
+              <li><code>POST /predict/summarize</code></li>
+              <li><code>POST /predict/answer</code></li>
+              <li><code>GET /metrics</code></li>
+              <li><a href="/docs">Swagger API Docs</a></li>
+            </ul>
+
+            <p class="card-hint">Click this card to flip and view Eagunu certificate</p>
+          </div>
+
+          <div class="card-face card-back">
+            <div class="badge">Eagunu Profile</div>
+            <div class="profile-image-wrap">
+              <img class="profile-image" src="/eagunu.png" alt="Eagunu certificate preview">
+            </div>
+
+            <p class="section-title">
+              The back of the card shows your profile certificate directly inside the page.
+            </p>
+
+            <div class="back-actions">
+              <a class="ghost-link" href="/eagunu.pdf" target="_blank" rel="noreferrer">Open PDF in New Tab</a>
+              <a class="ghost-link" href="/eagunu.png" target="_blank" rel="noreferrer">Open Image</a>
+              <span class="card-hint">Click again to flip back</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const card = document.getElementById("profile-card");
+
+      const toggleCard = () => {
+        card.classList.toggle("is-flipped");
+      };
+
+      card.addEventListener("click", toggleCard);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleCard();
+        }
+      });
+    </script>
+  </body>
+</html>
