@@ -62,7 +62,7 @@ pipeline {
           -v "$PWD:/workdir" \
           -w /workdir \
           python:3.11-slim \
-          sh -lc "python -m pip install --no-cache-dir --progress-bar off -r requirements.txt && python -m compileall app"'''
+          sh -lc "python -m compileall app"'''
       }
     }
 
