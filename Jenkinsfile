@@ -5,6 +5,7 @@ def pipelineConfig = [
   agentLabel: 'jslave-inbound',
   imageRepository: 'jcloudcodes/enterprise-ai-ml-platform-app',
   imageTag: env.BUILD_NUMBER,
+  dockerBuildExtraArgs: '--network host',
 
   vaultAddr: 'https://jcloudcodes-public-vault-e0a9d77c.e1f8f4d8.z1.hashicorp.cloud:8200',
   vaultNamespace: 'admin',
