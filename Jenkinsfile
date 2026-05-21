@@ -58,8 +58,11 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'python3 -m pip install --no-cache-dir --progress-bar off -r requirements.txt'
-        sh 'python3 -m compileall app'
+        sh '''docker run --rm \
+          -v "$PWD:/workdir" \
+          -w /workdir \
+          python:3.11-slim \
+          sh -lc "python -m pip install --no-cache-dir --progress-bar off -r requirements.txt && python -m compileall app"'''
       }
     }
 
