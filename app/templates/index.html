@@ -139,14 +139,14 @@
 
       .scene {
         perspective: 1800px;
-        width: 720px;
+        width: min(100%, 1180px);
       }
 
       .card {
         position: relative;
         z-index: 1;
-        width: 720px;
-        min-height: 560px;
+        width: 100%;
+        min-height: 620px;
         border-radius: 16px;
         transform-style: preserve-3d;
         transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -196,9 +196,10 @@
 
       h1 {
         color: #38bdf8;
-        font-size: 34px;
-        line-height: 1.1;
+        font-size: 64px;
+        line-height: 1.02;
         margin-bottom: 20px;
+        font-weight: 800;
       }
 
       p, li {
@@ -208,6 +209,78 @@
 
       ul {
         margin: 16px 0 22px 34px;
+      }
+
+      .platform-layout {
+        display: flex;
+        align-items: flex-start;
+        gap: 34px;
+        margin-top: 12px;
+      }
+
+      .platform-copy {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .platform-copy .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .platform-copy ul {
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.9;
+      }
+
+      .platform-copy ul li::marker {
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .model {
+        margin: 22px 0 0;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .endpoints-panel {
+        flex: 0 0 370px;
+        max-width: 370px;
+        margin-left: auto;
+        padding: 26px 28px;
+        border-radius: 22px;
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        background: rgba(2, 6, 23, 0.72);
+        box-shadow:
+          inset 0 0 0 1px rgba(125, 211, 252, 0.08),
+          0 18px 40px rgba(2, 6, 23, 0.22);
+        backdrop-filter: blur(4px);
+      }
+
+      .endpoints-panel p {
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 22px;
+      }
+
+      .endpoints-panel ul {
+        margin: 0 0 0 34px;
+      }
+
+      .endpoints-panel li {
+        margin-bottom: 12px;
+        font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        color: rgba(226, 232, 240, 0.96);
+      }
+
+      .endpoints-panel a {
+        font-family: inherit;
+        text-decoration: underline;
       }
 
       .model {
@@ -238,6 +311,22 @@
         font-size: 13px;
         letter-spacing: 0.04em;
         text-transform: uppercase;
+      }
+
+      @media (max-width: 1024px) {
+        h1 {
+          font-size: 48px;
+        }
+
+        .platform-layout {
+          flex-direction: column;
+        }
+
+        .endpoints-panel {
+          width: 100%;
+          max-width: none;
+          margin-left: 0;
+        }
       }
 
       .profile-image-wrap {
@@ -311,36 +400,42 @@
 
             <h1>Enterprise AI/ML Cloud Platform</h1>
 
-            <p class="section-title">
-              Real Transformer AI inference platform running on:
-            </p>
+            <div class="platform-layout">
+              <div class="platform-copy">
+                <p class="section-title">
+                  Real Transformer AI inference platform running on:
+                </p>
 
-            <ul>
-              <li>Kubernetes</li>
-              <li>AKS / EKS / GKE Ready</li>
-              <li>GitLab CI/CD</li>
-              <li>Argo CD GitOps</li>
-              <li>Helm</li>
-              <li>Prometheus</li>
-              <li>Grafana</li>
-              <li>Multi-Model Inference Routing</li>
-              <li>Ask AI Knowledge Assistant</li>
-            </ul>
+                <ul>
+                  <li>Kubernetes</li>
+                  <li>AKS / EKS / GKE Ready</li>
+                  <li>GitLab CI/CD</li>
+                  <li>Argo CD GitOps</li>
+                  <li>Helm</li>
+                  <li>Prometheus</li>
+                  <li>Grafana</li>
+                  <li>Multi-Model Inference Routing</li>
+                  <li>Ask AI Knowledge Assistant</li>
+                </ul>
 
-            <p class="model">
-              <b>Model:</b> distilbert-base-uncased-finetuned-sst-2-english
-            </p>
+                <p class="model">
+                  <b>Model:</b> distilbert-base-uncased-finetuned-sst-2-english
+                </p>
+              </div>
 
-            <p><b>Endpoints:</b></p>
+              <aside class="endpoints-panel">
+                <p><b>Endpoints:</b></p>
 
-            <ul>
-              <li><code>GET /health</code></li>
-              <li><code>POST /predict/sentiment</code></li>
-              <li><code>POST /predict/summarize</code></li>
-              <li><code>POST /predict/answer</code></li>
-              <li><code>GET /metrics</code></li>
-              <li><a href="/docs">Swagger API Docs</a></li>
-            </ul>
+                <ul>
+                  <li><code>GET /health</code></li>
+                  <li><code>POST /predict/sentiment</code></li>
+                  <li><code>POST /predict/summarize</code></li>
+                  <li><code>POST /predict/answer</code></li>
+                  <li><code>GET /metrics</code></li>
+                  <li><a href="/docs">Swagger API Docs</a></li>
+                </ul>
+              </aside>
+            </div>
 
             <p class="card-hint">Click this card to flip and view Eagunu certificate</p>
           </div>
