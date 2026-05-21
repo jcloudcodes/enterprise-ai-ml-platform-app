@@ -16,6 +16,7 @@ ENV HF_HUB_DISABLE_XET=1
 ENV HF_HUB_DISABLE_PROGRESS_BARS=1
 ENV DISABLE_TQDM=1
 ENV HF_HOME=/opt/huggingface
+ARG PREFETCH_MODELS=false
 
 COPY requirements.txt .
 
@@ -29,7 +30,7 @@ RUN pip install --no-cache-dir --progress-bar off \
     --retries 10 \
     -r requirements.txt
 
-RUN python -c "from huggingface_hub import snapshot_download; models=['distilbert-base-uncased-finetuned-sst-2-english','sshleifer/distilbart-cnn-12-6']; [snapshot_download(repo_id=model) for model in models]" || echo 'Model prefetch skipped during build; models will lazy-load at runtime'
+RUN if [ "$PREFETCH_MODELS" = "true" ]; then       python -c "from huggingface_hub import snapshot_download; models=['distilbert-base-uncased-finetuned-sst-2-english','sshleifer/distilbart-cnn-12-6']; [snapshot_download(repo_id=model) for model in models]";     else       echo 'Skipping model prefetch during build; models will lazy-load at runtime';     fi
 
 COPY app/ ./app/
 
